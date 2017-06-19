@@ -1,4 +1,11 @@
 eclipse.preferences.version=1
+encoding//autoSpider/autoSpider/items.py=utf-8
+encoding//autoSpider/autoSpider/pipelines.py=utf-8
+encoding//autoSpider/autoSpider/settings.py=utf-8
+encoding//autoSpider/autoSpider/spiders/autospd.py=utf-8
+encoding//blogSpider/blogSpider/pipelines.py=utf-8
+encoding//blogSpider/blogSpider/settings.py=utf-8
+encoding//blogSpider/blogSpider/spiders/myhexunspd.py=utf-8
 encoding//qiantuSpider/qiantuSpider/items.py=utf-8
 encoding//qiantuSpider/qiantuSpider/pipelines.py=utf-8
 encoding//qiantuSpider/qiantuSpider/settings.py=utf-8
