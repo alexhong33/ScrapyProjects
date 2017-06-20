@@ -26,8 +26,6 @@ class RealestateofshenzhenItem(scrapy.Item):
     PricePerSquareMeter = scrapy.Field()
     # 总价
     TotalPrice = scrapy.Field()
-    # 关注度
-    Watch = scrapy.Field()
     # 详细地址
     DetailedAddress = scrapy.Field()
     # 链接
