@@ -3,6 +3,8 @@ import scrapy
 import re
 from scrapy.http import Request
 from urllib import parse
+from ArticleSpider.items import JobBoleArticleItem
+
 
 class JobboleSpider(scrapy.Spider):
     name = 'jobbole'
@@ -19,9 +21,11 @@ class JobboleSpider(scrapy.Spider):
         '''
 
         #  解析列表页中的文章url 并交给scrapy下载后并进行解析
-        post_urls = response.css("#archive .floated-thumb .post-thumb a::attr(href)").extract()
-        for post_url in post_urls:
-            yield Request(url=parse.urljoin(response.url, post_url), callback=self.parse_detail)
+        post_nodes = response.css("#archive .floated-thumb .post-thumb a")
+        for post_node in post_nodes:
+            image_url = post_node.css("img::attr(src)").extract_first("")
+            post_url = post_node.css("::attr(href)").extract_first("")
+            yield Request(url=parse.urljoin(response.url, post_url), meta={"front_image_url":image_url}, callback=self.parse_detail)
 
         # 提取下一页并交给scrapy下载
         next_url = response.css(".next.page-numbers::attr(href)").extract_first("")
@@ -30,6 +34,8 @@ class JobboleSpider(scrapy.Spider):
 
 
     def parse_detail(self, response):
+        article_item = JobBoleArticleItem()
+
         # 提取文章的具体字段
         # 1.XPath写法
         # 2.CSS选择器写法
@@ -63,8 +69,8 @@ class JobboleSpider(scrapy.Spider):
         tags = ",".join(tag_list)
 '''
 
-
-
+        # 文章封面图
+        front_image_url = response.meta.get("front_image_url", "")
         # 通过CSS选择器提取字段
         # 提取标题
         title = response.css(".entry-header h1::text").extract()
@@ -96,4 +102,16 @@ class JobboleSpider(scrapy.Spider):
         tags = [element for element in tags if not element.strip().endswith("评论")]
         tags = ",".join(tags)
 
+
+        article_item["title"] = title
+        article_item["url"] = response.url
+        article_item["create_date"] = create_date
+        article_item["front_image_url"] = front_image_url
+        article_item["praise_nums"] = praise_nums
+        article_item["comment_nums"] = comment_nums
+        article_item["fav_nums"] = fav_nums
+        article_item["tags"] = tags
+        article_item["content"] = content
+
+        yield article_item
         pass
