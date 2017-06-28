@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import datetime
 import re
 from scrapy.http import Request
 from urllib import parse
@@ -74,7 +75,7 @@ class JobboleSpider(scrapy.Spider):
         front_image_url = response.meta.get("front_image_url", "")
         # 通过CSS选择器提取字段
         # 提取标题
-        title = response.css(".entry-header h1::text").extract()
+        title = response.css(".entry-header h1::text").extract()[0]
         # 提取日期
         create_date = response.css("p.entry-meta-hide-on-mobile::text").extract()[0].strip().replace("·", " ").strip()
         # 提取点赞数
@@ -108,6 +109,10 @@ class JobboleSpider(scrapy.Spider):
 
         article_item["title"] = title
         article_item["url"] = response.url
+        try:
+            create_date = datetime.datetime.strptime(create_date, "%Y%m%d").date()
+        except Exception as e:
+            create_date = datetime.datetime.now().date()
         article_item["create_date"] = create_date
         article_item["front_image_url"] = [front_image_url]
         article_item["praise_nums"] = praise_nums

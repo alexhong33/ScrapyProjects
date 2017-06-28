@@ -7,6 +7,8 @@
 import codecs
 # codecs 可以避免很多编码的繁杂工作
 import json
+import MySQLdb
+
 
 from scrapy.pipelines.images import ImagesPipeline
 # 多种输出格式 包
@@ -51,4 +53,26 @@ class ArticleImagePipeline(ImagesPipeline):
             image_file_path = value["path"]
         item["front_image_path"] = image_file_path
         return item
+        pass
+
+class MysqlPipeline(object):
+    def __init__(self):
+        self.conn = MySQLdb.connect('localhost', 'root', 'admin', 'article_spider', charset="utf8", use_unicode=True)
+        self.cursor = self.conn.cursor()
+
+    def process_item(self, item, spider):
+        insert_sql = """
+            insert into jobbole_article(title, url, create_date, fav_nums)
+            VALUES (%s, %s, %s, %s)
+        """
+        # execute + commit 同步操作, 大数据插入时 会堵塞
+        self.cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
+        self.conn.commit()
+
+
+class MysqlTwistedPipeline(object):
+
+    @classmethod
+    def from_settings(cls, settings):
+        host = settings["MYSQL_HOST"]
         pass
