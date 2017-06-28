@@ -120,6 +120,6 @@ IMAGES_STORE = os.path.join(project_dir, 'images')
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 MYSQL_HOST = "localhost"
-MYSQL_DBNAME = "jobbole_article"
+MYSQL_DBNAME = "article_spider"
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "admin"

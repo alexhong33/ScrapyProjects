@@ -8,11 +8,13 @@ import codecs
 # codecs 可以避免很多编码的繁杂工作
 import json
 import MySQLdb
+import MySQLdb.cursors
 
 
 from scrapy.pipelines.images import ImagesPipeline
 # 多种输出格式 包
 from scrapy.exporters import JsonItemExporter
+from twisted.enterprise import adbapi
 
 class ArticlespiderPipeline(object):
     def process_item(self, item, spider):
@@ -55,6 +57,8 @@ class ArticleImagePipeline(ImagesPipeline):
         return item
         pass
 
+
+# 采用同步机制 写入MySQL
 class MysqlPipeline(object):
     def __init__(self):
         self.conn = MySQLdb.connect('localhost', 'root', 'admin', 'article_spider', charset="utf8", use_unicode=True)
@@ -70,9 +74,47 @@ class MysqlPipeline(object):
         self.conn.commit()
 
 
+# 采用同步机制 写入MySQL
 class MysqlTwistedPipeline(object):
+    def __init__(self, dbpool):
+        self.dbpool = dbpool
 
     @classmethod
     def from_settings(cls, settings):
-        host = settings["MYSQL_HOST"]
+        dbparms = dict(
+            # 参数名称是固定的
+            host=settings["MYSQL_HOST"],
+            db = settings["MYSQL_DBNAME"],
+            user = settings["MYSQL_USER"],
+            passwd = settings["MYSQL_PASSWORD"],
+            charset = 'utf8',
+            cursorclass = MySQLdb.cursors.DictCursor,
+            use_unicode = True,
+        )
+        dbpool = adbapi.ConnectionPool("MySQLdb", **dbparms)
+
+        return cls(dbpool)
+        pass
+
+    def process_item(self, item, spider):
+        # 使用twisted将mysql插入变成异步执行
+        query = self.dbpool.runInteraction(self.do_insert, item)
+        # 处理异常
+        query.addErrback(self.handle_error)
+
+    def handle_error(self, failure):
+        # 处理异步插入的异常
+        print(failure)
+
+    def do_insert(self, cursor, item):
+        # 执行具体的插入
+        insert_sql = """
+                    insert into jobbole_article(title, url, create_date, fav_nums)
+                    VALUES (%s, %s, %s, %s)
+                """
+        # execute + commit 同步操作, 大数据插入时 会堵塞
+        cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
+
+
+
         pass
