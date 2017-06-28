@@ -72,7 +72,7 @@ ITEM_PIPELINES = {
     #'scrapy.pipelines.images.ImagesPipeline': 1,
 
     # 自定义导出图片
-    #'ArticleSpider.pipelines.ArticleImagePipeline': 1,
+    #'ArticleSpider.pipelines.ArticleImagePipeline': 300,
 
     # 自定义导出json
     #'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2
@@ -88,6 +88,7 @@ ITEM_PIPELINES = {
 
 
 }
+# 指定生成路径到ArticleSpider包下images 设置绝对路径
 IMAGES_URLS_FIELD = "front_image_url"
 project_dir = os.path.abspath(os.path.dirname(__file__))
 IMAGES_STORE = os.path.join(project_dir, 'images')

@@ -6,6 +6,9 @@
 # http://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+import datetime
+from scrapy.loader.processors import MapCompose, TakeFirst
+from scrapy.loader import ItemLoader
 
 
 class ArticlespiderItem(scrapy.Item):
@@ -14,9 +17,32 @@ class ArticlespiderItem(scrapy.Item):
     pass
 
 
+def add_jobbole(value):
+    return value+"-jobbole"
+
+
+def date_convert(value):
+    try:
+        create_date = datetime.datetime.strptime(value, "%Y/%m/%d").date()
+    except Exception as e:
+        create_date = datetime.datetime.now().date()
+
+    return create_date
+
+class ArticleItemLoader(ItemLoader):
+    # 自定义itemloader
+    default_output_processor = TakeFirst()
+
+
+
 class JobBoleArticleItem(scrapy.Item):
-    title = scrapy.Field()
-    create_date = scrapy.Field()
+    title = scrapy.Field(
+        input_processor = MapCompose(add_jobbole)
+    )
+    create_date = scrapy.Field(
+        input_processor = MapCompose(date_convert),
+        output_processor = TakeFirst()
+    )
     url = scrapy.Field()
     url_object_id = scrapy.Field()
     front_image_url = scrapy.Field()

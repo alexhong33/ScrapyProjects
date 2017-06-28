@@ -20,9 +20,8 @@ class ArticlespiderPipeline(object):
     def process_item(self, item, spider):
         return item
 
-
+# 自定义json文件的导出
 class JsonWithEncodingPipeline(object):
-    # 自定义json文件的导出
     def __init__(self):
         # w 为写入的模式
         self.file = codecs.open('article.json', 'w', encoding="utf-8")
@@ -33,7 +32,7 @@ class JsonWithEncodingPipeline(object):
     def spider_closed(self, spider):
         self.file.close()
 
-
+# 使用scrapy JsonExporter的JSON输出
 class JsonExporterPipeline(object):
     # 调用scrapy提供的json export导出json文件
     def __init__(self):
@@ -48,6 +47,7 @@ class JsonExporterPipeline(object):
         self.exporter.export_item(item)
         return item
 
+# 自定义图片输出
 class ArticleImagePipeline(ImagesPipeline):
     def item_completed(self, results, item, info):
         # result返回2个值 一个boolean 返回成功, 一个Tulpes 返回一个字典 提取其中的path路径
@@ -74,7 +74,7 @@ class MysqlPipeline(object):
         self.conn.commit()
 
 
-# 采用同步机制 写入MySQL
+# 采用异步机制 写入MySQL
 class MysqlTwistedPipeline(object):
     def __init__(self, dbpool):
         self.dbpool = dbpool
@@ -114,7 +114,5 @@ class MysqlTwistedPipeline(object):
                 """
         # execute + commit 同步操作, 大数据插入时 会堵塞
         cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
-
-
 
         pass
