@@ -43,6 +43,8 @@ class JobboleSpider(scrapy.Spider):
         # 1.XPath写法
         # 2.CSS选择器写法
 
+        # 使用XPath
+
         '''
         # 标题
         title = response.xpath('//div[@class="entry-header"]/h1/text()').extract()[0]
@@ -70,8 +72,12 @@ class JobboleSpider(scrapy.Spider):
         tag_list = response.xpath("//p[@class='entry-meta-hide-on-mobile']/a/text()").extract()
         tag_list = [element for element in tag_list if not element.strip().endswith("评论")]
         tags = ",".join(tag_list)
-'''
+        
+        '''
 
+        # 使用CSS选择器
+
+        '''
         # 文章封面图
         front_image_url = response.meta.get("front_image_url", "")
         # 通过CSS选择器提取字段
@@ -122,15 +128,20 @@ class JobboleSpider(scrapy.Spider):
         article_item["fav_nums"] = fav_nums
         article_item["tags"] = tags
         article_item["content"] = content
+        '''
 
+        # 使用item_loader
 
+        # 文章封面图
+        front_image_url = response.meta.get("front_image_url", "")
         # 通过itemloader加载item
+        # 使用自定义的ArticleItemLoader
         item_loader = ArticleItemLoader(item=JobBoleArticleItem(), response=response)
         item_loader.add_css("title", ".entry-header h1::text")
         item_loader.add_value("url", response.url)
+        # 处理为md5格式
         item_loader.add_value("url_object_id", get_md5(response.url))
         item_loader.add_css("create_date", "p.entry-meta-hide-on-mobile::text")
-
         item_loader.add_value("front_image_url", [front_image_url])
         item_loader.add_css("praise_nums", ".vote-post-up h10::text")
         item_loader.add_css("comment_nums", "a[href='#article-comment'] span::text")

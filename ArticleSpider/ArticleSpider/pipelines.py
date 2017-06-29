@@ -50,12 +50,13 @@ class JsonExporterPipeline(object):
 # 自定义图片输出
 class ArticleImagePipeline(ImagesPipeline):
     def item_completed(self, results, item, info):
-        # result返回2个值 一个boolean 返回成功, 一个Tulpes 返回一个字典 提取其中的path路径
-        for ok, value in results:
-            image_file_path = value["path"]
-        item["front_image_path"] = image_file_path
+        if "front_image_url" in item:
+            # result返回2个值 一个boolean 返回成功, 一个Tulpes 返回一个字典 提取其中的path路径
+            for ok, value in results:
+                image_file_path = value["path"]
+            item["front_image_path"] = image_file_path
         return item
-        pass
+
 
 
 # 采用同步机制 写入MySQL
