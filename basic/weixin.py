@@ -15,8 +15,7 @@ import urllib.error
 
 # 模拟成浏览器
 
-headers = ("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36(KHTML, \
-        like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.9")
+headers = ("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36(KHTML,like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.9")
 
 opener = urllib.request.build_opener()
 opener.addheaders = [headers]
@@ -75,14 +74,14 @@ def getlisturl(key, pagestart, pageend, proxy):
             data1 = use_proxy(proxy, url)
 
             # 获取文章链接的正则表达式
-            listurlpat = '<div class="txt-box">.*?(http://.*?)'
+
+            listurlpat = '<div class="txt-box">.*?(http://.*?)"'
 
             # 获取每页的所有文章链接并添加到列表listurl中
             listurl.append(re.compile(listurlpat, re.S).findall(data1))
 
         print("共获取到" + str(len(listurl)) + "页")
         return listurl
-
 
     except urllib.error.URLError as e:
         if hasattr(e, "code"):
@@ -191,15 +190,17 @@ def getcontent(listurl, proxy):
     </html>
 
         '''
+    print('运行完毕')
     fh = open("F:/AAAresult/1.html", "ab")
     fh.write(html2.encode("utf-8"))
     fh.close()
 
 
+
 # 设置关键词
 key = "物联网"
 # 设置代理服务器, 该代理服务器有可能失效, 读者需要换成新的有效代理服务器
-proxy = "114.232.153.139:808"
+proxy = "183.61.30.124:808"
 
 # 可以为getlisturl()与getcontent() 设置不同的代理服务器, 此处没有启用该项设置
 proxy2 = ""
