@@ -15,7 +15,7 @@ import urllib.error
 
 # 模拟成浏览器
 
-headers = ("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36(KHTML,like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.9")
+headers = ("User-Agent", "	Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0")
 
 opener = urllib.request.build_opener()
 opener.addheaders = [headers]
@@ -200,7 +200,7 @@ def getcontent(listurl, proxy):
 # 设置关键词
 key = "物联网"
 # 设置代理服务器, 该代理服务器有可能失效, 读者需要换成新的有效代理服务器
-proxy = "183.61.30.124:808"
+proxy = "120.77.152.36:8888"
 
 # 可以为getlisturl()与getcontent() 设置不同的代理服务器, 此处没有启用该项设置
 proxy2 = ""

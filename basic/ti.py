@@ -1,12 +1,38 @@
 # -*- coding: utf-8 -*-
-# @Time        : 2017/7/15 10:29
+# @Time        : 2017/7/15 14:08
 # @Author      : Hong
 # @Contact     : alexhongf@163.com
-# @File        : RegexTest.py
-# @Description : STOP wishing START doing.
+# @File        : ti.py
+# @Description : STOP wishing START doing. 
 
-import re
+'''
 
+
+
+# List Comprehension
+x=1
+y=1
+z=1
+t=2
+print([[i,j,k] for i in range(x+1) for j in range(y+1) for k in range(z+1) if(i+j+k) != t])
+
+
+# map 的用法
+n = int(input())
+arr = map(int, input().split())
+la = list(arr)
+max_num = max(la)
+newlist = []
+for i in la:
+    if i < max_num:
+        newlist.append(i)
+
+print(max(newlist))
+
+'''
+
+
+import  re
 s = '''<!DOCTYPE HTML>
 <html>
 <head>
@@ -83,7 +109,7 @@ s = '''<!DOCTYPE HTML>
     <div class="other"><span class="s1">您的访问出错了</span><span class="s2"><a href="/">返回首页&gt;&gt;</a></span></div>
 </div>
 <div class="content-box">
-    <p class="ip-time-p">IP:183.61.30.124<br>访问时间：2017.07.15 11:33:15</p>
+    <p class="ip-time-p">IP:111.13.7.42<br>访问时间：2017.07.17 14:40:33</p>
     <p class="p2">用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证。</p>
     <p class="p3"><label for="seccodeInput">验证码：</label></p>
     <form name="authform" method="POST" id="seccodeForm" action="/">
@@ -94,7 +120,7 @@ s = '''<!DOCTYPE HTML>
             <input type="hidden" name="m" value="0" >            <span class="s1">
                 <script>imgRequestTime=new Date();</script>
                 <a onclick="changeImg2();" href="javascript:void(0)">
-                    <img id="seccodeImage" onload="setImgCode(1)" onerror="setImgCode(0)" src="util/seccode.php?tc=1500089595" width="100" height="40" alt="请输入图中的验证码" title="请输入图中的验证码">
+                    <img id="seccodeImage" onload="setImgCode(1)" onerror="setImgCode(0)" src="util/seccode.php?tc=1500273633" width="100" height="40" alt="请输入图中的验证码" title="请输入图中的验证码">
                 </a>
             </span>
             <a href="javascript:void(0);" id="change-img" onclick="changeImg2();" style="padding-left:50px;">换一张</a>
@@ -103,25 +129,19 @@ s = '''<!DOCTYPE HTML>
     </form>
     <p class="p5">
         <a href="javascript:void(0);" id="submit">提交</a>
-        <span>提交后没解决问题？欢迎<a href="http://fankui.help.sogou.com/index.php/web/web/index?type=10&anti_time=1500089595&domain=weixin.sogou.com" target="_blank">反馈</a>。</span>
+        <span>提交后没解决问题？欢迎<a href="http://fankui.help.sogou.com/index.php/web/web/index?type=10&anti_time=1500273633&domain=weixin.sogou.com" target="_blank">反馈</a>。</span>
     </p>
 </div>
-<div id="ft"><a href="http://fuwu.sogou.com/" target="_blank">企业推广</a><a href="http://corp.sogou.com/" target="_blank">关于搜狗</a><a href="/docs/terms.htm?v=1" target="_blank">免责声明</a><a href="http://fankui.help.sogou.com/index.php/web/web/index?type=10&anti_time=1500089595&domain=weixin.sogou.com" target="_blank">意见反馈</a><br>&nbsp;&copy;&nbsp;2017<span id="footer-year"></span>&nbsp;SOGOU&nbsp;-&nbsp;<a href="http://www.miibeian.gov.cn" target="_blank" class="g">京ICP证050897号</a>&nbsp;-&nbsp;京公网安备1100<span class="ba">00000025号</span></div>
+<div id="ft"><a href="http://fuwu.sogou.com/" target="_blank">企业推广</a><a href="http://corp.sogou.com/" target="_blank">关于搜狗</a><a href="/docs/terms.htm?v=1" target="_blank">免责声明</a><a href="http://fankui.help.sogou.com/index.php/web/web/index?type=10&anti_time=1500273633&domain=weixin.sogou.com" target="_blank">意见反馈</a><br>&nbsp;&copy;&nbsp;2017<span id="footer-year"></span>&nbsp;SOGOU&nbsp;-&nbsp;<a href="http://www.miibeian.gov.cn" target="_blank" class="g">京ICP证050897号</a>&nbsp;-&nbsp;京公网安备1100<span class="ba">00000025号</span></div>
 <script src="static/js/index.min.js?v=0.1.3"></script>
 </body>
 </html><!--zly-->
 '''
+listurl = []
+listurlpat = '<div class="txt-box">.*?(http://.*?)"'
 
-# 验证正则表达式
+listurl.append(re.compile(listurlpat, re.S).findall(s))
+print(listurl)
 
-myurl = []
 
-s = ''
-pat = '<div class="txt-box">.*?(http://.*?)"'
 
-myurl.append(re.compile(pat, re.S).findall(s))
-#myurl.append(re.compile(pat, re.S).findall(s2))
-
-print(myurl)
-
- 
