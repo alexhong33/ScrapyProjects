@@ -10,7 +10,9 @@ from scrapy.loader import ItemLoader
 
 
 class JobboleSpider(scrapy.Spider):
+    # 爬虫名字
     name = 'jobbole'
+    # 域名
     allowed_domains = ['blog.jobbole.com']
     start_urls = ['http://blog.jobbole.com/all-posts/']
 
@@ -26,7 +28,9 @@ class JobboleSpider(scrapy.Spider):
         #  解析列表页中的文章url 并交给scrapy下载后并进行解析
         post_nodes = response.css("#archive .floated-thumb .post-thumb a")
         for post_node in post_nodes:
+            # 获取 图片
             image_url = post_node.css("img::attr(src)").extract_first("")
+            # 获取 文章链接
             post_url = post_node.css("::attr(href)").extract_first("")
             yield Request(url=parse.urljoin(response.url, post_url), meta={"front_image_url":image_url}, callback=self.parse_detail)
 
